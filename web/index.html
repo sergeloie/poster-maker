@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Poster maker</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Poster maker</h1>
+</header>
+
+<main>
+  <section id="controls" aria-label="Settings">
+    <fieldset>
+      <legend>Image</legend>
+      <input type="file" id="file-input" accept="image/*" class="visually-hidden">
+      <label id="dropzone" for="file-input">Click to choose an image, or drop it here</label>
+      <p id="file-info" class="muted" hidden></p>
+      <p id="load-error" class="error" hidden></p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Format</legend>
+      <label class="option"><input type="radio" name="format" value="16:9" id="fmt-16-9" checked> 16:9</label>
+      <label class="option"><input type="radio" name="format" value="1:1" id="fmt-1-1"> 1:1</label>
+      <label class="option"><input type="radio" name="format" value="2x" id="fmt-2x"> 2x width</label>
+    </fieldset>
+
+    <fieldset id="fs-placement">
+      <legend>Placement of the new area</legend>
+      <div class="option-grid">
+        <label class="option"><input type="radio" name="placement" value="left" id="pl-left"> Left</label>
+        <label class="option"><input type="radio" name="placement" value="right" id="pl-right"> Right</label>
+        <label class="option"><input type="radio" name="placement" value="top" id="pl-top"> Top</label>
+        <label class="option"><input type="radio" name="placement" value="bottom" id="pl-bottom"> Bottom</label>
+      </div>
+    </fieldset>
+
+    <fieldset id="fs-bg">
+      <legend>New area background</legend>
+      <label class="option"><input type="radio" name="bg" value="white" id="bg-white" checked> White</label>
+      <label class="option"><input type="radio" name="bg" value="black" id="bg-black"> Black</label>
+      <label class="option"><input type="radio" name="bg" value="transparent" id="bg-transparent"> Transparent</label>
+    </fieldset>
+
+    <fieldset id="fs-text">
+      <legend>Text</legend>
+      <label class="field"><span class="field-label">Text</span>
+        <textarea id="text-input" rows="4" placeholder="Optional text for the new area"></textarea>
+      </label>
+      <label class="field"><span class="field-label">Font</span>
+        <select id="font-select"></select>
+      </label>
+      <label class="option"><input type="checkbox" id="bold"> Bold</label>
+      <label class="option"><input type="checkbox" id="auto-size" checked> Auto size (fill the area)</label>
+      <div class="row">
+        <label class="field"><span class="field-label">Max size (px)</span>
+          <input type="number" id="max-size" min="4" max="4000" step="1" value="64" disabled>
+        </label>
+        <label class="field"><span class="field-label">Text color</span>
+          <input type="color" id="text-color" value="#000000">
+        </label>
+      </div>
+      <p id="text-hint" class="warn" hidden>The text does not fit in the new area.</p>
+    </fieldset>
+
+    <button type="button" id="download" disabled>Download PNG</button>
+    <p id="no-area-hint" class="hint" hidden>This format already matches the image shape, so no new area is added.</p>
+  </section>
+
+  <section id="preview" aria-label="Preview">
+    <div id="canvas-frame" hidden><canvas id="poster"></canvas></div>
+    <p id="preview-empty" class="hint">Load an image to see the preview.</p>
+    <p id="dims" class="muted"></p>
+  </section>
+</main>
+
+<script src="layout.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
