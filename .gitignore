@@ -1,0 +1,4 @@
+.scratch/
+.slim/
+__pycache__/
+*.pyc
