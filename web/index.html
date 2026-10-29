@@ -26,6 +26,7 @@
       <label class="option"><input type="radio" name="format" value="16:9" id="fmt-16-9" checked> 16:9</label>
       <label class="option"><input type="radio" name="format" value="1:1" id="fmt-1-1"> 1:1</label>
       <label class="option"><input type="radio" name="format" value="2x" id="fmt-2x"> 2x width</label>
+      <p id="no-area-hint" class="hint" hidden>This format already matches the image shape, so no new area is added.</p>
     </fieldset>
 
     <fieldset id="fs-placement">
@@ -65,15 +66,15 @@
       </div>
       <p id="text-hint" class="warn" hidden>The text does not fit in the new area.</p>
     </fieldset>
-
-    <button type="button" id="download" disabled>Download PNG</button>
-    <p id="no-area-hint" class="hint" hidden>This format already matches the image shape, so no new area is added.</p>
   </section>
 
   <section id="preview" aria-label="Preview">
     <div id="canvas-frame" hidden><canvas id="poster"></canvas></div>
+    <div id="preview-bar">
+      <p id="dims" class="muted"></p>
+      <button type="button" id="download" disabled>Download PNG</button>
+    </div>
     <p id="preview-empty" class="hint">Load an image to see the preview.</p>
-    <p id="dims" class="muted"></p>
   </section>
 </main>
 

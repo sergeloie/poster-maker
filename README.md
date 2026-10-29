@@ -45,7 +45,7 @@ python3 server.py --port 8765 --no-browser
   can therefore be large.
 - `2x` with the image on the left/right only. `16:9` and `1:1` offer the sides the shape needs.
 - When the chosen format adds no area (for example a square image in `1:1`), text is disabled.
-- Everything runs in the browser; the server only serves three static files.
+- Everything runs in the browser; the server only serves four static files.
 
 ## Layout
 
