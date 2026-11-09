@@ -51,6 +51,22 @@
       <label class="field"><span class="field-label">Text</span>
         <textarea id="text-input" rows="4" placeholder="Optional text for the new area"></textarea>
       </label>
+      <div class="field">
+        <span class="field-label">Horizontal align</span>
+        <div class="option-grid three" role="radiogroup" aria-label="Horizontal align">
+          <label class="option"><input type="radio" name="h-align" value="left" id="ha-left"> Left</label>
+          <label class="option"><input type="radio" name="h-align" value="center" id="ha-center" checked> Center</label>
+          <label class="option"><input type="radio" name="h-align" value="right" id="ha-right"> Right</label>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">Vertical align</span>
+        <div class="option-grid three" role="radiogroup" aria-label="Vertical align">
+          <label class="option"><input type="radio" name="v-align" value="top" id="va-top"> Top</label>
+          <label class="option"><input type="radio" name="v-align" value="middle" id="va-middle" checked> Middle</label>
+          <label class="option"><input type="radio" name="v-align" value="bottom" id="va-bottom"> Bottom</label>
+        </div>
+      </div>
       <label class="field"><span class="field-label">Font</span>
         <select id="font-select"></select>
       </label>

@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert");
-const { computeLayout, validPlacements, wrapText, layoutText } = require("../web/layout.js");
+const { computeLayout, validPlacements, wrapText, layoutText, textBlockOrigin } = require("../web/layout.js");
 
 // Fake metrics: every glyph is half the font size wide.
 const measure = (s, size) => s.length * size * 0.5;
@@ -79,4 +79,18 @@ test("layoutText respects an explicit maximum size", () => {
 test("layoutText reports failure when even size 1 does not fit", () => {
   const r = layoutText("Hello", { maxWidth: 2, maxHeight: 1, maxSize: 40, measure });
   assert.strictEqual(r.fits, false);
+});
+
+test("textBlockOrigin aligns the block to the padded area", () => {
+  const area = { x: 10, y: 20, width: 200, height: 100 };
+  const pad = 5;
+  assert.deepStrictEqual(textBlockOrigin(area, pad, 40, "left", "top"), { x: 15, top: 25 });
+  assert.deepStrictEqual(textBlockOrigin(area, pad, 40, "center", "middle"), { x: 110, top: 50 });
+  assert.deepStrictEqual(textBlockOrigin(area, pad, 40, "right", "bottom"), { x: 205, top: 75 });
+});
+
+test("textBlockOrigin rejects unknown alignments", () => {
+  const area = { x: 0, y: 0, width: 10, height: 10 };
+  assert.throws(() => textBlockOrigin(area, 0, 5, "justify", "top"));
+  assert.throws(() => textBlockOrigin(area, 0, 5, "left", "baseline"));
 });

@@ -81,6 +81,10 @@ legend {
   grid-template-columns: 1fr 1fr;
 }
 
+.option-grid.three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .field {
   display: block;
   margin: 8px 0;

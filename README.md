@@ -35,8 +35,9 @@ python3 server.py --port 8765 --no-browser
 3. Choose the side the original image sits on. Only the sides on the growth axis are enabled —
    the free area must stay a single rectangle.
 4. Choose the background of the new area: white, black, or transparent (PNG keeps alpha).
-5. Type text. It is wrapped and sized to fill the new area, minus a small padding. Font family
-   and a maximum size can be set; "auto" uses the whole area.
+5. Type text. It is wrapped and sized to fill the new area, minus a small padding. Horizontal
+   alignment (left, center, right) and vertical alignment (top, middle, bottom) place the block
+   within that area. Font family and a maximum size can be set; "auto" uses the whole area.
 6. Download the result as PNG.
 
 ## Notes and limits

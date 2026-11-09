@@ -1,4 +1,5 @@
-// Poster-maker UI. Depends on computeLayout, validPlacements, layoutText from layout.js.
+// Poster-maker UI. Depends on computeLayout, validPlacements, layoutText, textBlockOrigin
+// from layout.js.
 (function () {
   "use strict";
 
@@ -32,6 +33,8 @@
     bold: false,
     autoSize: true,
     maxSize: 64,
+    hAlign: "center",
+    vAlign: "middle",
     color: DEFAULT_COLORS.white,
     colorTouched: false, // once the user picks a color, background changes stop overwriting it
   };
@@ -136,15 +139,15 @@
 
     ctx.font = fontCss(result.size);
     ctx.fillStyle = state.color;
-    ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     var lineHeight = result.size * 1.2;
     var blockHeight = result.lines.length * lineHeight;
-    var centerX = area.x + area.width / 2;
-    // Center of the first line, so the whole block is vertically centered in the area.
-    var y = area.y + (area.height - blockHeight) / 2 + lineHeight / 2;
+    var origin = textBlockOrigin(area, pad, blockHeight, state.hAlign, state.vAlign);
+    ctx.textAlign = state.hAlign;
+    // First line's middle, so the block starts at the aligned top edge.
+    var y = origin.top + lineHeight / 2;
     for (var i = 0; i < result.lines.length; i++) {
-      ctx.fillText(result.lines[i], centerX, y);
+      ctx.fillText(result.lines[i], origin.x, y);
       y += lineHeight;
     }
   }
@@ -270,6 +273,18 @@
     $("bold").addEventListener("change", function () {
       state.bold = this.checked;
       render();
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('input[name="h-align"]'), function (r) {
+      r.addEventListener("change", function () {
+        state.hAlign = this.value;
+        render();
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('input[name="v-align"]'), function (r) {
+      r.addEventListener("change", function () {
+        state.vAlign = this.value;
+        render();
+      });
     });
     $("auto-size").addEventListener("change", function () {
       state.autoSize = this.checked;

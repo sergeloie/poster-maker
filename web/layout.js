@@ -122,11 +122,35 @@ function layoutText(text, opts) {
   return { size: best.size, lines: best.lines, fits: true };
 }
 
+var H_ALIGNMENTS = ["left", "center", "right"];
+var V_ALIGNMENTS = ["top", "middle", "bottom"];
+
+// Anchor of a text block inside the padded text area. x is the line anchor for
+// ctx.textAlign = hAlign; top is the top edge of the block.
+function textBlockOrigin(area, padding, blockHeight, hAlign, vAlign) {
+  if (H_ALIGNMENTS.indexOf(hAlign) === -1) throw new Error("unknown horizontal alignment: " + hAlign);
+  if (V_ALIGNMENTS.indexOf(vAlign) === -1) throw new Error("unknown vertical alignment: " + vAlign);
+
+  var innerX = area.x + padding;
+  var innerY = area.y + padding;
+  var innerWidth = Math.max(0, area.width - padding * 2);
+  var innerHeight = Math.max(0, area.height - padding * 2);
+
+  var x = hAlign === "left" ? innerX : hAlign === "right" ? innerX + innerWidth : innerX + innerWidth / 2;
+  var top = vAlign === "top"
+    ? innerY
+    : vAlign === "bottom"
+      ? innerY + innerHeight - blockHeight
+      : innerY + (innerHeight - blockHeight) / 2;
+  return { x: x, top: top };
+}
+
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     computeLayout: computeLayout,
     validPlacements: validPlacements,
     wrapText: wrapText,
     layoutText: layoutText,
+    textBlockOrigin: textBlockOrigin,
   };
 }
