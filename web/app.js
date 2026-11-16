@@ -1,5 +1,5 @@
-// Poster-maker UI. Depends on computeLayout, validPlacements, layoutText, textBlockOrigin
-// from layout.js.
+// Poster-maker UI. Depends on computeLayout, validPlacements, splitTextArea, layoutText,
+// textBlockOrigin from layout.js.
 (function () {
   "use strict";
 
@@ -29,6 +29,8 @@
     placement: null,
     bg: "white",
     text: "",
+    text2: "",
+    twoFields: false,
     font: 0,
     bold: false,
     autoSize: true,
@@ -114,13 +116,19 @@
     }
     ctx.drawImage(state.img, layout.image.x, layout.image.y);
 
-    if (layout.area && state.text.trim()) drawText(ctx, layout.area);
+    if (layout.area) {
+      var parts = splitTextArea(layout.area, state.placement, state.twoFields);
+      for (var i = 0; i < parts.length; i++) {
+        var text = i === 0 ? state.text : state.text2;
+        if (text.trim()) drawText(ctx, parts[i], text, state.twoFields ? "Text " + (i + 1) : "The text");
+      }
+    }
     return layout;
   }
 
-  function drawText(ctx, area) {
+  function drawText(ctx, area, text, label) {
     var pad = Math.max(8, Math.round(Math.min(area.width, area.height) * 0.05));
-    var result = layoutText(state.text, {
+    var result = layoutText(text, {
       maxWidth: area.width - pad * 2,
       maxHeight: area.height - pad * 2,
       maxSize: state.autoSize ? Math.max(area.width, area.height) : state.maxSize,
@@ -133,7 +141,7 @@
 
     if (!result.fits) {
       $("text-hint").hidden = false;
-      $("text-hint").textContent = "The text does not fit in the new area. Try shorter text or turn auto size on.";
+      $("text-hint").textContent = label + " does not fit in the new area. Try shorter text or turn auto size on.";
       return;
     }
 
@@ -182,6 +190,11 @@
     $("download").disabled = !hasImg;
     $("max-size").disabled = state.autoSize;
     $("no-area-hint").hidden = !(hasImg && !hasArea);
+
+    $("two-fields").checked = state.twoFields;
+    $("text-2-field").hidden = !state.twoFields;
+    $("text-1-label").textContent = state.twoFields ? "Text 1" : "Text";
+    $("text-2-label").textContent = "Text 2";
 
     draw();
   }
@@ -264,6 +277,14 @@
 
     $("text-input").addEventListener("input", function () {
       state.text = this.value;
+      render();
+    });
+    $("two-fields").addEventListener("change", function () {
+      state.twoFields = this.checked;
+      render();
+    });
+    $("text-input-2").addEventListener("input", function () {
+      state.text2 = this.value;
       render();
     });
     fontSelect.addEventListener("change", function () {

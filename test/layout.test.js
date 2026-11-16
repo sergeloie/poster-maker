@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert");
-const { computeLayout, validPlacements, wrapText, layoutText, textBlockOrigin } = require("../web/layout.js");
+const { computeLayout, validPlacements, splitTextArea, wrapText, layoutText, textBlockOrigin } = require("../web/layout.js");
 
 // Fake metrics: every glyph is half the font size wide.
 const measure = (s, size) => s.length * size * 0.5;
@@ -54,6 +54,50 @@ test("a placement off the growth axis is rejected", () => {
 test("no growth means no text area", () => {
   assert.strictEqual(computeLayout(500, 500, "1:1", "top").area, null);
   assert.deepStrictEqual(validPlacements(500, 500, "1:1"), []);
+});
+
+test("splitTextArea keeps one field in the whole band", () => {
+  const area = { x: 10, y: 20, width: 300, height: 100 };
+  assert.deepStrictEqual(splitTextArea(area, "top", false), [area]);
+  assert.deepStrictEqual(splitTextArea(null, "left", true), [null]);
+});
+
+test("splitTextArea stacks two fields for a band on the left/right", () => {
+  const area = { x: 400, y: 0, width: 200, height: 801 };
+  assert.deepStrictEqual(splitTextArea(area, "left", true), [
+    { x: 400, y: 0, width: 200, height: 400 },
+    { x: 400, y: 400, width: 200, height: 401 },
+  ]);
+  assert.deepStrictEqual(splitTextArea(area, "right", true), [
+    { x: 400, y: 0, width: 200, height: 400 },
+    { x: 400, y: 400, width: 200, height: 401 },
+  ]);
+});
+
+test("splitTextArea places two fields side by side for a band on the top/bottom", () => {
+  const area = { x: 0, y: 500, width: 2001, height: 100 };
+  const parts = splitTextArea(area, "bottom", true);
+  assert.deepStrictEqual(parts, [
+    { x: 0, y: 500, width: 1000, height: 100 },
+    { x: 1000, y: 500, width: 1001, height: 100 },
+  ]);
+  assert.deepStrictEqual(splitTextArea(area, "top", true), parts);
+});
+
+test("splitTextArea halves cover the original band exactly", () => {
+  const area = { x: 7, y: 11, width: 403, height: 257 };
+  [splitTextArea(area, "left", true), splitTextArea(area, "top", true)].forEach((parts) => {
+    assert.strictEqual(parts.length, 2);
+    assert.strictEqual(parts[0].x + parts[0].width <= parts[1].x || parts[0].y + parts[0].height <= parts[1].y, true);
+    const left = Math.min(parts[0].x, parts[1].x);
+    const top = Math.min(parts[0].y, parts[1].y);
+    const right = Math.max(parts[0].x + parts[0].width, parts[1].x + parts[1].width);
+    const bottom = Math.max(parts[0].y + parts[0].height, parts[1].y + parts[1].height);
+    assert.strictEqual(left, area.x);
+    assert.strictEqual(top, area.y);
+    assert.strictEqual(right, area.x + area.width);
+    assert.strictEqual(bottom, area.y + area.height);
+  });
 });
 
 test("wrapText breaks on words and on over-long words", () => {

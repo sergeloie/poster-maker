@@ -38,6 +38,9 @@ python3 server.py --port 8765 --no-browser
 5. Type text. It is wrapped and sized to fill the new area, minus a small padding. Horizontal
    alignment (left, center, right) and vertical alignment (top, middle, bottom) place the block
    within that area. Font family and a maximum size can be set; "auto" uses the whole area.
+   Enable "Two text fields" to add a second text area: the new area is then split in half. For a
+   band on the left/right the two fields are stacked top and bottom; for a band on top/bottom
+   they sit side by side. Both fields share the same font, alignment and color settings.
 6. Download the result as PNG.
 
 ## Notes and limits

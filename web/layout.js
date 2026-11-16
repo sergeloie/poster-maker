@@ -50,6 +50,27 @@ function validPlacements(imageWidth, imageHeight, mode) {
   return growthAxis(imageWidth, imageHeight, mode) === "horizontal" ? ["left", "right"] : ["top", "bottom"];
 }
 
+// Splits the text band between one or two text fields. A band on the left/right is tall, so two
+// fields are stacked vertically; a band on top/bottom is wide, so they sit side by side. The
+// halves are rounded so that they always cover the original area exactly, with no gap or overlap.
+function splitTextArea(area, placement, twoFields) {
+  if (!area || !twoFields) return [area];
+
+  var halfW = Math.floor(area.width / 2);
+  var halfH = Math.floor(area.height / 2);
+
+  if (placement === "left" || placement === "right") {
+    return [
+      { x: area.x, y: area.y, width: area.width, height: halfH },
+      { x: area.x, y: area.y + halfH, width: area.width, height: area.height - halfH },
+    ];
+  }
+  return [
+    { x: area.x, y: area.y, width: halfW, height: area.height },
+    { x: area.x + halfW, y: area.y, width: area.width - halfW, height: area.height },
+  ];
+}
+
 // Greedy word wrap. Words wider than maxWidth are broken by character.
 function wrapText(text, maxWidth, measure) {
   var lines = [];
@@ -149,6 +170,7 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     computeLayout: computeLayout,
     validPlacements: validPlacements,
+    splitTextArea: splitTextArea,
     wrapText: wrapText,
     layoutText: layoutText,
     textBlockOrigin: textBlockOrigin,
